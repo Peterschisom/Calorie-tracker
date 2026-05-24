@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Track your daily calorie intake with a beautiful, privacy-first calorie tracker. No account needed — all data stays on your device.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self'">
+  <meta name="theme-color" content="#141520">
+  <title>CaloriQ — Smart Calorie Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container" id="app">
+
+    <!-- ─── Header ──────────────────────────────── -->
+    <header class="app-header" id="app-header">
+      <div class="app-logo">
+        <div class="logo-icon" aria-hidden="true">🔥</div>
+        <h1>CaloriQ</h1>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle" id="theme-toggle" type="button"
+                aria-label="Toggle light and dark theme">
+          <span class="theme-icon theme-icon--moon" aria-hidden="true">🌙</span>
+          <span class="theme-icon theme-icon--sun" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ─── Dashboard ───────────────────────────── -->
+    <section class="dashboard" aria-label="Dashboard overview">
+
+      <!-- Progress Ring -->
+      <div class="glass-card progress-section" id="progress-section">
+        <div class="glass-card__title">
+          <span class="card-icon" aria-hidden="true">📊</span>
+          Today's Progress
+        </div>
+        <div class="progress-ring-wrapper">
+          <svg class="progress-ring" width="200" height="200" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="progress-ring__bg" cx="100" cy="100" r="85"></circle>
+            <circle class="progress-ring__fill" id="progress-ring-fill" cx="100" cy="100" r="85"
+                    stroke-dasharray="534.07" stroke-dashoffset="534.07"></circle>
+          </svg>
+          <div class="progress-center">
+            <div class="progress-calories" id="progress-calories">0</div>
+            <div class="progress-label">kcal consumed</div>
+          </div>
+        </div>
+        <div class="progress-goal">
+          Goal: <span id="goal-display" role="button" tabindex="0" aria-label="Click to edit daily calorie goal">2000 kcal</span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-section" id="stats-section">
+        <div class="stat-card" id="stat-consumed">
+          <div class="stat-icon stat-icon--consumed" aria-hidden="true">🍽️</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-consumed-value">0</div>
+            <div class="stat-label">Consumed Today</div>
+          </div>
+        </div>
+        <div class="stat-card" id="stat-remaining">
+          <div class="stat-icon stat-icon--remaining" aria-hidden="true">✅</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-remaining-value">2000</div>
+            <div class="stat-label">Remaining</div>
+          </div>
+        </div>
+        <div class="stat-card" id="stat-average">
+          <div class="stat-icon stat-icon--average" aria-hidden="true">📈</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-average-value">0</div>
+            <div class="stat-label">7-Day Average</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Meal Form -->
+      <div class="glass-card add-meal-section" id="add-meal-section">
+        <div class="glass-card__title">
+          <span class="card-icon" aria-hidden="true">➕</span>
+          Log a Meal
+        </div>
+        <form class="meal-form" id="meal-form" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="meal-name-input">Meal Name</label>
+            <input class="form-input" type="text" id="meal-name-input"
+                   placeholder="e.g. Grilled Chicken Salad" maxlength="100" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="meal-calories-input">Calories</label>
+            <input class="form-input" type="number" id="meal-calories-input"
+                   placeholder="e.g. 450" min="1" max="10000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="meal-type-select">Type</label>
+            <select class="form-select" id="meal-type-select" required>
+              <option value="breakfast">🌅 Breakfast</option>
+              <option value="lunch">☀️ Lunch</option>
+              <option value="dinner">🌙 Dinner</option>
+              <option value="snack">🍿 Snack</option>
+            </select>
+          </div>
+          <button class="btn-primary" type="submit" id="add-meal-btn">Add Meal</button>
+          <div class="form-error" id="form-error" role="alert"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ─── Today's Meals ───────────────────────── -->
+    <section class="glass-card meals-section" id="meals-section" aria-label="Today's meals">
+      <div class="glass-card__title">
+        <span class="card-icon" aria-hidden="true">🍴</span>
+        Today's Meals
+      </div>
+      <div class="meals-list" id="meals-list" role="list">
+        <!-- Meals rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ─── Weekly Chart ────────────────────────── -->
+    <section class="glass-card chart-section" id="chart-section" aria-label="Weekly calorie chart">
+      <div class="glass-card__title">
+        <span class="card-icon" aria-hidden="true">📅</span>
+        This Week
+      </div>
+      <div class="chart-area" id="chart-area">
+        <div class="chart-container" id="chart-container">
+          <!-- Bars rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Goal Edit Modal ─────────────────────── -->
+    <div class="modal-overlay" id="goal-modal" role="dialog" aria-modal="true" aria-labelledby="goal-modal-title">
+      <div class="modal">
+        <h2 id="goal-modal-title">Set Daily Goal</h2>
+        <div class="form-group">
+          <label class="form-label" for="goal-input">Calorie Goal (kcal)</label>
+          <input class="form-input" type="number" id="goal-input"
+                 min="500" max="10000" step="50" placeholder="e.g. 2000">
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" type="button" id="goal-cancel-btn">Cancel</button>
+          <button class="btn-primary" type="button" id="goal-save-btn">Save Goal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Toast Container ─────────────────────── -->
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
