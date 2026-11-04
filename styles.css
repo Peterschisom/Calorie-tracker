@@ -9,8 +9,8 @@
 /* ── CSS Custom Properties (Dark Theme — Default) ──── */
 :root {
   /* Brand */
-  --hue-primary: 250;
-  --hue-accent: 170;
+  --hue-primary: 340;
+  --hue-accent: 190;
 
   /* Surfaces */
   --bg-base: hsl(230, 20%, 8%);
